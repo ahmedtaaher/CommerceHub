@@ -19,5 +19,7 @@ namespace Domain.Catalog.Errors
     public static readonly Error ProductNameTooShort = new("catalog.product_name_too_short", "Product name must be at least 3 characters.");
 
     public static readonly Error ProductNameTooLong = new("catalog.product_name_too_long", "Product name cannot exceed 200 characters.");
+
+    public static readonly Error ProductDescriptionTooLong = new("catalog.product_description_too_long", "Product description cannot exceed 4000 characters.");
   }
 }
