@@ -1,11 +1,11 @@
 namespace Domain.Shared.Abstractions
 {
-  public abstract class BaseEntity
+  public abstract class BaseEntity<TId>
   {
-    public Guid Id { get; protected set; }
-    protected BaseEntity()
+    protected BaseEntity(TId id)
     {
-      Id = Guid.NewGuid();
+      Id = id;
     }
+    public TId Id { get; protected set; }
   }
 }

@@ -1,3 +1,4 @@
+using Domain.Catalog.Errors;
 using Domain.Catalog.ValueObjects;
 using Domain.Shared.Errors;
 

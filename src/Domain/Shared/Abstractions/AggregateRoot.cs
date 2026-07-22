@@ -2,14 +2,18 @@ using Domain.Shared.Events;
 
 namespace Domain.Shared.Abstractions
 {
-  public abstract class AggregateRoot : BaseEntity
+  public abstract class AggregateRoot<TId> : BaseEntity<TId>
   {
     private readonly List<IDomainEvent> _domainEvents = [];
-
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
-
-    protected void Raise(IDomainEvent domainEvent)
+    protected AggregateRoot(TId id) : base(id)
     {
+    }
+
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+
+    protected void RaiseDomainEvents(IDomainEvent domainEvent)
+    {
+      ArgumentNullException.ThrowIfNull(domainEvent);
       _domainEvents.Add(domainEvent);
     }
 

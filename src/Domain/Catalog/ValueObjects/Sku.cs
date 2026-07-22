@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Domain.Catalog.Errors;
 using Domain.Shared.Abstractions;
 using Domain.Shared.Errors;
 
