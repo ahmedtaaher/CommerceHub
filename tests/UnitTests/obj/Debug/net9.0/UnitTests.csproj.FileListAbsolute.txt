@@ -102,3 +102,4 @@ E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\refint\UnitTests.dll
 E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\UnitTests.pdb
 E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\UnitTests.genruntimeconfig.cache
 E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\ref\UnitTests.dll
+E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\UnitTests.sourcelink.json

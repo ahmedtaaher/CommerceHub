@@ -35,3 +35,4 @@ E:\CommerceHub\src\API\obj\Debug\net9.0\refint\API.dll
 E:\CommerceHub\src\API\obj\Debug\net9.0\API.pdb
 E:\CommerceHub\src\API\obj\Debug\net9.0\API.genruntimeconfig.cache
 E:\CommerceHub\src\API\obj\Debug\net9.0\ref\API.dll
+E:\CommerceHub\src\API\obj\Debug\net9.0\API.sourcelink.json

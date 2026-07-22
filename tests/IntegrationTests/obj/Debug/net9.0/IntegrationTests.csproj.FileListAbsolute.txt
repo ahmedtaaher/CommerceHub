@@ -112,3 +112,4 @@ E:\CommerceHub\tests\IntegrationTests\obj\Debug\net9.0\refint\IntegrationTests.d
 E:\CommerceHub\tests\IntegrationTests\obj\Debug\net9.0\IntegrationTests.pdb
 E:\CommerceHub\tests\IntegrationTests\obj\Debug\net9.0\IntegrationTests.genruntimeconfig.cache
 E:\CommerceHub\tests\IntegrationTests\obj\Debug\net9.0\ref\IntegrationTests.dll
+E:\CommerceHub\tests\IntegrationTests\obj\Debug\net9.0\IntegrationTests.sourcelink.json
