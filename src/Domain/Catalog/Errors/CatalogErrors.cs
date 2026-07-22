@@ -21,5 +21,11 @@ namespace Domain.Catalog.Errors
     public static readonly Error ProductNameTooLong = new("catalog.product_name_too_long", "Product name cannot exceed 200 characters.");
 
     public static readonly Error ProductDescriptionTooLong = new("catalog.product_description_too_long", "Product description cannot exceed 4000 characters.");
+
+    public static readonly Error ProductAlreadyActive = new("catalog.product_already_active", "Product is already active.");
+
+    public static readonly Error ProductAlreadyInactive = new("catalog.product_already_inactive", "Product is already inactive.");
+
+    public static readonly Error ProductDiscontinued = new("catalog.product_discontinued", "Discontinued products cannot be modified.");
   }
 }

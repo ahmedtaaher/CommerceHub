@@ -9,8 +9,13 @@ namespace Domain.Catalog.Entities
 {
   public sealed class Product : AggregateRoot<Guid>
   {
-    private Product(Guid id, string name, string description, Sku sku, Money price) : base(id)
+    private Product(Guid id, ProductName name, ProductDescription description, Sku sku, Money price) : base(id)
     {
+      ArgumentNullException.ThrowIfNull(name);
+      ArgumentNullException.ThrowIfNull(description);
+      ArgumentNullException.ThrowIfNull(sku);
+      ArgumentNullException.ThrowIfNull(price);
+
       Name = name;
       Description = description;
       Sku = sku;
@@ -18,33 +23,73 @@ namespace Domain.Catalog.Entities
       Status = ProductStatus.Draft;
     }
 
-    public string Name { get; private set; }
-
-    public string Description { get; private set; }
-
-    public Sku Sku { get; private set; }
-
+    public ProductName Name { get; private set; }
+    public ProductDescription Description { get; private set; }
+    public Sku Sku { get; }
     public Money Price { get; private set; }
-
     public ProductStatus Status { get; private set; }
 
-    public static Result<Product> Create(string name, string description, Sku sku, Money price)
+    public static Result<Product> Create(Guid id, ProductName name, ProductDescription description, Sku sku, Money price)
     {
-      if (string.IsNullOrWhiteSpace(name))
-        return Result<Product>.Failure(CatalogErrors.EmptyName);
+      ArgumentNullException.ThrowIfNull(name);
+      ArgumentNullException.ThrowIfNull(description);
+      ArgumentNullException.ThrowIfNull(sku);
+      ArgumentNullException.ThrowIfNull(price);
 
-      name = name.Trim();
+      return Result<Product>.Success(new Product(id, name, description, sku, price));
+    }
 
-      if (name.Length < 3 || name.Length > 200)
-        return Result<Product>.Failure(CatalogErrors.InvalidNameLength);
+    public Result Rename(ProductName name)
+    {
+      ArgumentNullException.ThrowIfNull(name);
 
-      return Result<Product>.Success(new Product(Guid.NewGuid(), name, description.Trim(), sku, price));
+      var result = EnsureNotDiscontinued();
+
+      if (result.IsFailure)
+        return result;
+
+      Name = name;
+
+      return Result.Success();
+    }
+
+    public Result ChangeDescription(ProductDescription description)
+    {
+      ArgumentNullException.ThrowIfNull(description);
+
+      var result = EnsureNotDiscontinued();
+
+      if (result.IsFailure)
+        return result;
+
+      Description = description;
+
+      return Result.Success();
+    }
+
+    public Result ChangePrice(Money price)
+    {
+      ArgumentNullException.ThrowIfNull(price);
+
+      var result = EnsureNotDiscontinued();
+
+      if (result.IsFailure)
+        return result;
+
+      Price = price;
+
+      return Result.Success();
     }
 
     public Result Activate()
     {
       if (Status == ProductStatus.Active)
-        return Result.Success();
+        return Result.Failure(CatalogErrors.ProductAlreadyActive);
+
+      var result = EnsureNotDiscontinued();
+
+      if (result.IsFailure)
+        return result;
 
       Status = ProductStatus.Active;
 
@@ -54,31 +99,32 @@ namespace Domain.Catalog.Entities
     public Result Deactivate()
     {
       if (Status == ProductStatus.Inactive)
-        return Result.Success();
+        return Result.Failure(CatalogErrors.ProductAlreadyInactive);
+
+      var result = EnsureNotDiscontinued();
+
+      if (result.IsFailure)
+        return result;
 
       Status = ProductStatus.Inactive;
 
       return Result.Success();
     }
 
-    public Result ChangePrice(Money newPrice)
+    public Result Discontinue()
     {
-      Price = newPrice;
+      if (Status == ProductStatus.Discontinued)
+        return Result.Success();
+
+      Status = ProductStatus.Discontinued;
 
       return Result.Success();
     }
 
-    public Result Rename(string newName)
+    private Result EnsureNotDiscontinued()
     {
-      if (string.IsNullOrWhiteSpace(newName))
-        return Result.Failure(CatalogErrors.EmptyName);
-
-      newName = newName.Trim();
-
-      if (newName.Length < 3 || newName.Length > 200)
-        return Result.Failure(CatalogErrors.InvalidNameLength);
-
-      Name = newName;
+      if (Status == ProductStatus.Discontinued)
+        return Result.Failure(CatalogErrors.ProductDiscontinued);
 
       return Result.Success();
     }
