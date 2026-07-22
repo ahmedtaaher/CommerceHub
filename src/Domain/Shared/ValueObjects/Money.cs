@@ -5,7 +5,7 @@ namespace Domain.Shared.ValueObjects
 {
   public sealed class Money : ValueObject
   {
-    private Money(decimal amount, string currency)
+    private Money(decimal amount, Currency currency)
     {
       Amount = amount;
       Currency = currency;
@@ -13,22 +13,19 @@ namespace Domain.Shared.ValueObjects
 
     public decimal Amount { get; }
 
-    public string Currency { get; }
+    public Currency Currency { get; }
 
-    public static Result<Money> Create(decimal amount, string currency)
+    public static Result<Money> Create(decimal amount, string currencyCode)
     {
       if (amount < 0)
         return Result<Money>.Failure(CommonErrors.NegativeAmount);
 
-      if (string.IsNullOrWhiteSpace(currency))
-        return Result<Money>.Failure(CommonErrors.CurrencyRequired);
+      var currencyResult = Currency.Create(currencyCode);
 
-      currency = currency.Trim().ToUpperInvariant();
+      if (currencyResult.IsFailure)
+        return Result<Money>.Failure(currencyResult.Error);
 
-      if (currency.Length != 3)
-        return Result<Money>.Failure(CommonErrors.InvalidCurrency);
-
-      return Result<Money>.Success(new Money(amount, currency));
+      return Result<Money>.Success(new Money(amount, currencyResult.Value));
     }
 
     public Money Add(Money other)
@@ -70,10 +67,24 @@ namespace Domain.Shared.ValueObjects
       return Amount < other.Amount;
     }
 
+    public bool GreaterThanOrEqual(Money other)
+    {
+      EnsureSameCurrency(other);
+
+      return Amount >= other.Amount;
+    }
+
+    public bool LessThanOrEqual(Money other)
+    {
+      EnsureSameCurrency(other);
+
+      return Amount <= other.Amount;
+    }
+
     private void EnsureSameCurrency(Money other)
     {
       if (Currency != other.Currency)
-        throw new InvalidOperationException("Money operations require matching currencies.");
+        throw new InvalidOperationException($"Currency mismatch ({Currency} vs {other.Currency}).");
     }
 
     protected override IEnumerable<object?> GetEqualityComponents()
