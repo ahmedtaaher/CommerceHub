@@ -1,3 +1,4 @@
+using Domain.Shared.Errors;
 using Domain.Shared.ValueObjects;
 
 namespace UnitTests.Domain.Shared.ValueObjects
@@ -5,53 +6,81 @@ namespace UnitTests.Domain.Shared.ValueObjects
   public class MoneyTests
   {
     [Fact]
-    public void Should_Create_Money()
+    public void Create_Should_Return_Success_When_Data_Is_Valid()
     {
-      var money = new Money(100, "USD");
+      var result = Money.Create(100, "usd");
 
-      Assert.Equal(100, money.Amount);
-      Assert.Equal("USD", money.Currency);
+      Assert.True(result.IsSuccess);
+      Assert.Equal(100, result.Value.Amount);
+      Assert.Equal("USD", result.Value.Currency);
     }
 
     [Fact]
-    public void Should_Add_Money()
+    public void Create_Should_Fail_When_Amount_Is_Negative()
     {
-      var first = new Money(100, "USD");
-      var second = new Money(50, "USD");
+      var result = Money.Create(-10, "USD");
 
-      var result = first + second;
+      Assert.True(result.IsFailure);
+      Assert.Equal(CommonErrors.NegativeAmount, result.Error);
+    }
+
+    [Fact]
+    public void Create_Should_Fail_When_Currency_Is_Empty()
+    {
+      var result = Money.Create(100, "");
+
+      Assert.True(result.IsFailure);
+      Assert.Equal(CommonErrors.CurrencyRequired, result.Error);
+    }
+
+    [Fact]
+    public void Create_Should_Fail_When_Currency_Is_Invalid()
+    {
+      var result = Money.Create(100, "US");
+
+      Assert.True(result.IsFailure);
+      Assert.Equal(CommonErrors.InvalidCurrency, result.Error);
+    }
+
+    [Fact]
+    public void Add_Should_Return_New_Money()
+    {
+      var first = Money.Create(100, "USD").Value;
+      var second = Money.Create(50, "USD").Value;
+
+      var result = first.Add(second);
 
       Assert.Equal(150, result.Amount);
     }
 
     [Fact]
-    public void Should_Be_Equal()
+    public void Subtract_Should_Return_New_Money()
     {
-      var first = new Money(100, "USD");
-      var second = new Money(100, "USD");
+      var first = Money.Create(100, "USD").Value;
+      var second = Money.Create(30, "USD").Value;
+
+      var result = first.Subtract(second);
+
+      Assert.Equal(70, result.Amount);
+    }
+
+    [Fact]
+    public void Multiply_Should_Return_New_Money()
+    {
+      var money = Money.Create(100, "USD").Value;
+
+      var result = money.Multiply(5);
+
+      Assert.Equal(500, result.Amount);
+    }
+
+    [Fact]
+    public void Equal_Money_Should_Be_Equal()
+    {
+      var first = Money.Create(100, "USD").Value;
+      var second = Money.Create(100, "USD").Value;
 
       Assert.Equal(first, second);
-    }
-
-    [Fact]
-    public void Should_Throw_When_Currencies_Differ()
-    {
-      var usd = new Money(100, "USD");
-      var eur = new Money(50, "EUR");
-
-      Assert.Throws<InvalidOperationException>(() =>
-      {
-        var result = usd + eur;
-      });
-    }
-
-    [Fact]
-    public void Should_Reject_Negative_Amount()
-    {
-      Assert.Throws<ArgumentOutOfRangeException>(() =>
-      {
-        new Money(-10, "USD");
-      });
     }
   }
 }
