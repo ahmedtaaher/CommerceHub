@@ -1,5 +1,6 @@
 using Domain.Catalog.Enums;
 using Domain.Catalog.Errors;
+using Domain.Catalog.Events;
 using Domain.Catalog.ValueObjects;
 using Domain.Shared.Abstractions;
 using Domain.Shared.Errors;
@@ -36,7 +37,11 @@ namespace Domain.Catalog.Entities
       ArgumentNullException.ThrowIfNull(sku);
       ArgumentNullException.ThrowIfNull(price);
 
-      return Result<Product>.Success(new Product(id, name, description, sku, price));
+      var product = new Product(id, name, description, sku, price);
+
+      product.RaiseDomainEvents(new ProductCreatedDomainEvent(product.Id));
+
+      return Result<Product>.Success(product);
     }
 
     public Result Rename(ProductName name)
@@ -49,6 +54,8 @@ namespace Domain.Catalog.Entities
         return result;
 
       Name = name;
+
+      RaiseDomainEvents(new ProductRenamedDomainEvent(Id, name));
 
       return Result.Success();
     }
@@ -78,6 +85,8 @@ namespace Domain.Catalog.Entities
 
       Price = price;
 
+      RaiseDomainEvents(new ProductPriceChangedDomainEvent(Id, price, price.Currency));
+
       return Result.Success();
     }
 
@@ -92,6 +101,8 @@ namespace Domain.Catalog.Entities
         return result;
 
       Status = ProductStatus.Active;
+
+      RaiseDomainEvents(new ProductActivatedDomainEvent(Id));
 
       return Result.Success();
     }
@@ -117,6 +128,8 @@ namespace Domain.Catalog.Entities
         return Result.Success();
 
       Status = ProductStatus.Discontinued;
+
+      RaiseDomainEvents(new ProductDiscontinuedDomainEvent(Id));
 
       return Result.Success();
     }

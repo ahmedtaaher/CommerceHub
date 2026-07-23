@@ -1,7 +1,7 @@
 
 namespace Domain.Shared.Events
 {
-  public abstract class DomainEvent : IDomainEvent
+  public abstract record DomainEvent : IDomainEvent
   {
     public DateTime OccurredOn { get ;} = DateTime.UtcNow;
   }

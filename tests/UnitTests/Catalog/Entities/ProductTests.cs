@@ -1,6 +1,7 @@
 using Domain.Catalog.Entities;
 using Domain.Catalog.Enums;
 using Domain.Catalog.Errors;
+using Domain.Catalog.Events;
 using Domain.Catalog.ValueObjects;
 using Domain.Shared.ValueObjects;
 
@@ -139,6 +140,60 @@ namespace UnitTests.Catalog.Entities
 
       Assert.True(result.IsFailure);
       Assert.Equal(CatalogErrors.ProductDiscontinued, result.Error);
+    }
+
+    [Fact]
+    public void Create_Should_Raise_ProductCreated_Event()
+    {
+      var result = Product.Create(ProductId, ProductName.Create("Gaming Laptop").Value, ProductDescription.Create("Description").Value, Sku.Create("LAPTOP-001").Value, Money.Create(2500m, "USD").Value);
+
+      var product = result.Value;
+
+      Assert.Single(product.DomainEvents);
+
+      Assert.IsType<ProductCreatedDomainEvent>(product.DomainEvents.First());
+    }
+
+    [Fact]
+    public void Activate_Should_Raise_ProductActivated_Event()
+    {
+      var product = CreateProduct();
+
+      product.ClearDomainEvents();
+
+      product.Activate();
+
+      Assert.Single(product.DomainEvents);
+
+      Assert.IsType<ProductActivatedDomainEvent>(product.DomainEvents.First());
+    }
+
+    [Fact]
+    public void Rename_Should_Raise_ProductRenamed_Event()
+    {
+      var product = CreateProduct();
+
+      product.ClearDomainEvents();
+
+      product.Rename(ProductName.Create("Office Laptop").Value);
+
+      Assert.Single(product.DomainEvents);
+
+      Assert.IsType<ProductRenamedDomainEvent>(product.DomainEvents.First());
+    }
+
+    [Fact]
+    public void ChangePrice_Should_Raise_Event()
+    {
+      var product = CreateProduct();
+
+      product.ClearDomainEvents();
+
+      product.ChangePrice(Money.Create(3000m, "USD").Value);
+
+      Assert.Single(product.DomainEvents);
+
+      Assert.IsType<ProductPriceChangedDomainEvent>(product.DomainEvents.First());
     }
 
     private static Product CreateProduct()
