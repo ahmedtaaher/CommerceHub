@@ -1,14 +1,27 @@
+using Application.Behaviors;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-public static class DependencyInjection
+namespace Application
 {
-  public static IServiceCollection AddApplication(this IServiceCollection services)
+  public static class DependencyInjection
   {
-    services.AddMediatR(cfg =>
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-      cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
-    });
+      services.AddMediatR(cfg =>
+      {
+        cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+      });
 
-    return services;
+      services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+
+      return services;
+    }
   }
 }
