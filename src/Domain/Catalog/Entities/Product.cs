@@ -10,25 +10,27 @@ namespace Domain.Catalog.Entities
 {
   public sealed class Product : AggregateRoot<Guid>
   {
-    private Product(Guid id, ProductName name, ProductDescription description, Sku sku, Money price) : base(id)
+    private Product() 
+    {
+      
+    }
+    private Product(Guid id, ProductName name, ProductDescription description, Sku sku) : base(id)
     {
       ArgumentNullException.ThrowIfNull(name);
       ArgumentNullException.ThrowIfNull(description);
       ArgumentNullException.ThrowIfNull(sku);
-      ArgumentNullException.ThrowIfNull(price);
 
       Name = name;
       Description = description;
       Sku = sku;
-      Price = price;
       Status = ProductStatus.Draft;
     }
 
-    public ProductName Name { get; private set; }
-    public ProductDescription Description { get; private set; }
-    public Sku Sku { get; }
-    public Money Price { get; private set; }
-    public ProductStatus Status { get; private set; }
+    public ProductName Name { get; private set; } = default!;
+    public ProductDescription Description { get; private set; } = default!;
+    public Sku Sku { get; private set;} = default!;
+    public Money Price { get; private set; } = default!;
+    public ProductStatus Status { get; private set; } 
 
     public static Result<Product> Create(Guid id, ProductName name, ProductDescription description, Sku sku, Money price)
     {
@@ -37,7 +39,10 @@ namespace Domain.Catalog.Entities
       ArgumentNullException.ThrowIfNull(sku);
       ArgumentNullException.ThrowIfNull(price);
 
-      var product = new Product(id, name, description, sku, price);
+      var product = new Product(id, name, description, sku)
+      {
+        Price = price
+      };
 
       product.RaiseDomainEvents(new ProductCreatedDomainEvent(product.Id));
 

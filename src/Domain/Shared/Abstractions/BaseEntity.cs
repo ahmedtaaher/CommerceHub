@@ -2,6 +2,10 @@ namespace Domain.Shared.Abstractions
 {
   public abstract class BaseEntity<TId>
   {
+    protected BaseEntity()
+    {
+      
+    }
     protected BaseEntity(TId id)
     {
       Id = id;

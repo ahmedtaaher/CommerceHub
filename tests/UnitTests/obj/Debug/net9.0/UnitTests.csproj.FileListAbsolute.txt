@@ -103,3 +103,12 @@ E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\UnitTests.pdb
 E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\UnitTests.genruntimeconfig.cache
 E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\ref\UnitTests.dll
 E:\CommerceHub\tests\UnitTests\obj\Debug\net9.0\UnitTests.sourcelink.json
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\MediatR.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\MediatR.Contracts.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+E:\CommerceHub\tests\UnitTests\bin\Debug\net9.0\System.Diagnostics.DiagnosticSource.dll

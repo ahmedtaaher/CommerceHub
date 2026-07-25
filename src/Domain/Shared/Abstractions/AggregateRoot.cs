@@ -5,6 +5,11 @@ namespace Domain.Shared.Abstractions
   public abstract class AggregateRoot<TId> : BaseEntity<TId>
   {
     private readonly List<IDomainEvent> _domainEvents = [];
+   
+    protected AggregateRoot()
+    {
+      
+    }
     protected AggregateRoot(TId id) : base(id)
     {
     }

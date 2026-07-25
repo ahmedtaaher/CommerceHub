@@ -5,15 +5,19 @@ namespace Domain.Shared.ValueObjects
 {
   public sealed class Money : ValueObject
   {
+    private Money()
+    {
+      
+    }
     private Money(decimal amount, Currency currency)
     {
       Amount = amount;
       Currency = currency;
     }
 
-    public decimal Amount { get; }
+    public decimal Amount { get; private set; }
 
-    public Currency Currency { get; }
+    public Currency Currency { get; private set; } = default!;
 
     public static Result<Money> Create(decimal amount, string currencyCode)
     {

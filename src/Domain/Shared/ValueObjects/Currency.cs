@@ -5,12 +5,16 @@ namespace Domain.Shared.ValueObjects
 {
   public class Currency : ValueObject
   {
+    private Currency()
+    {
+      
+    }
     private Currency(string code)
     {
       Code = code;
     }
 
-    public string Code { get; }
+    public string Code { get; private set; } = default!;
 
     public static Result<Currency> Create(string code)
     {
