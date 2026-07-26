@@ -31,5 +31,9 @@ namespace Domain.Catalog.Errors
     public static readonly Error ProductDiscontinued = new("catalog.product_discontinued", "Discontinued products cannot be modified.");
 
     public static readonly Error ProductNotFound = new("Product.NotFound", "The product was not found.");
+
+    public static readonly Error CategoryNotFound = new("Category.NotFound", "Category was not found.");
+
+    public static readonly Error CategoryAlreadyExists = new("Category.AlreadyExists", "A category with the same name already exists.");
   }
 }
