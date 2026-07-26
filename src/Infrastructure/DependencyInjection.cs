@@ -1,4 +1,5 @@
 using Application.Abstractions.Persistence;
+using Infrastructure.Persistence.Read;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Write;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,16 @@ public static class DependencyInjection
       options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
     });
 
+    services.AddDbContext<CommerceHubReadDbContext>(options =>
+    {
+      options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+    });
+
     services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<CommerceHubWriteDbContext>());
 
     services.AddScoped<IProductRepository, ProductRepository>();
+    
+    services.AddScoped<IProductReadRepository, ProductReadRepository>();
 
     return services;
   }

@@ -129,3 +129,5 @@ E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Npgsql.EntityFrameworkCor
 E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\System.Diagnostics.DiagnosticSource.dll
 E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Infrastructure.dll
 E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Infrastructure.pdb
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\FluentValidation.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll

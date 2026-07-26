@@ -29,5 +29,7 @@ namespace Domain.Catalog.Errors
     public static readonly Error ProductAlreadyInactive = new("catalog.product_already_inactive", "Product is already inactive.");
 
     public static readonly Error ProductDiscontinued = new("catalog.product_discontinued", "Discontinued products cannot be modified.");
+
+    public static readonly Error ProductNotFound = new("Product.NotFound", "The product was not found.");
   }
 }

@@ -4,7 +4,7 @@ using Domain.Shared.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Write.Configurations
 {
   public class ProductConfiguration : IEntityTypeConfiguration<Product>
   {

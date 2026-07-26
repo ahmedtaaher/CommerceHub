@@ -1,6 +1,7 @@
 using Application.Abstractions.Persistence;
 using Domain.Catalog.Entities;
 using Domain.Shared.Abstractions;
+using Infrastructure.Persistence.Write.Configurations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ namespace Infrastructure.Persistence.Write
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      modelBuilder.ApplyConfigurationsFromAssembly(typeof(CommerceHubWriteDbContext).Assembly);
+      modelBuilder.ApplyConfiguration(new ProductConfiguration());
 
       base.OnModelCreating(modelBuilder);
     }
