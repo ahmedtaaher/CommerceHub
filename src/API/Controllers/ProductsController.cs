@@ -4,11 +4,14 @@ using Application.Catalog.Commands.DeleteProduct;
 using Application.Catalog.Commands.UpdateProduct;
 using Application.Catalog.Queries.GetProductById;
 using Application.Catalog.Queries.GetProducts;
+using Application.Common.Authorization;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+  [Authorize]
   [ApiController]
   [Route("api/[controller]")]
   public class ProductsController : ControllerBase
@@ -20,6 +23,7 @@ namespace API.Controllers
       _sender = sender;
     }
 
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductRequest request)
     {
@@ -40,6 +44,7 @@ namespace API.Controllers
       return CreatedAtAction(nameof(GetById), new { id = result.Value }, result.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -51,6 +56,7 @@ namespace API.Controllers
       return Ok(result.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetProducts([FromQuery] GetProductsQuery query)
     {
@@ -62,6 +68,7 @@ namespace API.Controllers
       return Ok(result.Value);
     }
 
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request)
     {
@@ -80,6 +87,7 @@ namespace API.Controllers
       return NoContent();
     }
 
+    [Authorize(Roles = Roles.Admin)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

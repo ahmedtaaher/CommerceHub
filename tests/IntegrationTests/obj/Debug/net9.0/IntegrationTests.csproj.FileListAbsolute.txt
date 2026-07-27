@@ -131,3 +131,11 @@ E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Infrastructure.dll
 E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Infrastructure.pdb
 E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\FluentValidation.dll
 E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\CommerceHub\tests\IntegrationTests\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

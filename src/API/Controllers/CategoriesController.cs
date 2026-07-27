@@ -4,11 +4,14 @@ using Application.Catalog.Commands.DeleteCategory;
 using Application.Catalog.Commands.UpdateCategory;
 using Application.Catalog.Queries.GetCategories;
 using Application.Catalog.Queries.GetCategoryById;
+using Application.Common.Authorization;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+  [Authorize]
   [ApiController]
   [Route("api/[controller]")]
   public class CategoriesController : ControllerBase
@@ -20,6 +23,7 @@ namespace API.Controllers
       _sender = sender;
     }
 
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     [HttpPost]
     public async Task<IActionResult> Create(CreateCategoryCommand command)
     {
@@ -28,9 +32,10 @@ namespace API.Controllers
       if (result.IsFailure)
         return BadRequest(result.Error);
 
-      return CreatedAtAction(nameof(GetById), new { id = result.Value }, result.Value);
+      return Ok(result.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -42,6 +47,7 @@ namespace API.Controllers
       return Ok(result.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetCategories([FromQuery] GetCategoriesQuery query)
     {
@@ -53,6 +59,7 @@ namespace API.Controllers
       return Ok(result.Value);
     }
 
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateCategoryRequest request)
     {
@@ -66,6 +73,7 @@ namespace API.Controllers
       return NoContent();
     }
 
+    [Authorize(Roles = Roles.Admin)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
