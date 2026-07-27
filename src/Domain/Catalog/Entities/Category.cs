@@ -16,6 +16,10 @@ namespace Domain.Catalog.Entities
 
     public string? Description { get; private set; }
 
+    private readonly List<Product> _products = new();
+
+    public IReadOnlyCollection<Product> Products => _products.AsReadOnly();
+
     public static Result<Category> Create(Guid id,CategoryName name, string? description)
     {
       var category = new Category

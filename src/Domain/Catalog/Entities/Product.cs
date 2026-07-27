@@ -29,10 +29,12 @@ namespace Domain.Catalog.Entities
     public ProductName Name { get; private set; } = default!;
     public ProductDescription Description { get; private set; } = default!;
     public Sku Sku { get; private set;} = default!;
+    public Guid CategoryId { get; private set; }
+    public Category Category { get; private set; } = default!;
     public Money Price { get; private set; } = default!;
     public ProductStatus Status { get; private set; } 
 
-    public static Result<Product> Create(Guid id, ProductName name, ProductDescription description, Sku sku, Money price)
+    public static Result<Product> Create(Guid id, Guid categoryId, ProductName name, ProductDescription description, Sku sku, Money price)
     {
       ArgumentNullException.ThrowIfNull(name);
       ArgumentNullException.ThrowIfNull(description);
@@ -41,6 +43,7 @@ namespace Domain.Catalog.Entities
 
       var product = new Product(id, name, description, sku)
       {
+        CategoryId = categoryId,
         Price = price
       };
 
@@ -91,6 +94,19 @@ namespace Domain.Catalog.Entities
       Price = price;
 
       RaiseDomainEvents(new ProductPriceChangedDomainEvent(Id, price, price.Currency));
+
+      return Result.Success();
+    }
+
+    public Result AssignCategory(Guid categoryId)
+    {
+      if (CategoryId == categoryId)
+        return Result.Success();
+
+      CategoryId = categoryId;
+
+      RaiseDomainEvents(
+        new ProductCategoryChangedDomainEvent(Id, categoryId));
 
       return Result.Success();
     }

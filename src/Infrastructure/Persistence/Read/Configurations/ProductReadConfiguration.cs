@@ -27,6 +27,10 @@ namespace Infrastructure.Persistence.Read.Configurations
       builder.Property(x => x.Currency).HasMaxLength(3).IsRequired();
 
       builder.Property(x => x.Status).HasMaxLength(30).IsRequired();
+
+      builder.Property(x => x.CategoryId);
+
+      builder.Property(x => x.CategoryName).HasMaxLength(100);
     }
   }
 }

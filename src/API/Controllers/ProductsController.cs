@@ -21,8 +21,17 @@ namespace API.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateProductCommand command)
+    public async Task<IActionResult> Create(CreateProductRequest request)
     {
+      var command = new CreateProductCommand(
+        request.CategoryId,
+        request.Name,
+        request.Description,
+        request.Sku,
+        request.Price,
+        request.Currency
+      );
+      
       var result = await _sender.Send(command);
 
       if (result.IsFailure)

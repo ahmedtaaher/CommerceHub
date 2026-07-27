@@ -15,5 +15,9 @@ namespace Infrastructure.Persistence.Read.Models
     public string Currency { get; init; } = default!;
 
     public string Status { get; init; } = default!;
+
+    public Guid CategoryId { get; set; }
+
+    public string CategoryName { get; set; } = default!;
   }
 }

@@ -11,10 +11,12 @@ namespace Application.Catalog.Commands.CreateProduct
   public sealed class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, Guid>
   {
     private readonly IProductRepository _productRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public CreateProductCommandHandler(IProductRepository productRepository)
+    public CreateProductCommandHandler(IProductRepository productRepository, ICategoryRepository categoryRepository)
     {
       _productRepository = productRepository;
+      _categoryRepository = categoryRepository;
     }
 
     public async Task<Result<Guid>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -35,6 +37,13 @@ namespace Application.Catalog.Commands.CreateProduct
       if (skuResult.IsFailure)
         return Result<Guid>.Failure(skuResult.Error);
 
+      var category = await _categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken);
+
+      if (category is null)
+      {
+        return Result<Guid>.Failure(CatalogErrors.CategoryNotFound);
+      }
+
       var skuExists = await _productRepository.ExistsBySkuAsync(skuResult.Value, cancellationToken);
 
       if (skuExists)
@@ -49,6 +58,7 @@ namespace Application.Catalog.Commands.CreateProduct
 
       var productResult = Product.Create(
         productId,
+        request.CategoryId,
         nameResult.Value,
         descriptionResult.Value,
         skuResult.Value,

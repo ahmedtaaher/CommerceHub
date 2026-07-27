@@ -18,8 +18,9 @@ namespace UnitTests.Catalog.Entities
       var description = ProductDescription.Create("High-end gaming laptop").Value;
       var sku = Sku.Create("LAPTOP-001").Value;
       var price = Money.Create(2500m, "USD").Value;
+      var categoryId = Guid.NewGuid();
 
-      var result = Product.Create(ProductId, name, description, sku, price);
+      var result = Product.Create(ProductId, categoryId, name, description, sku, price);
 
       Assert.True(result.IsSuccess);
 
@@ -145,7 +146,9 @@ namespace UnitTests.Catalog.Entities
     [Fact]
     public void Create_Should_Raise_ProductCreated_Event()
     {
-      var result = Product.Create(ProductId, ProductName.Create("Gaming Laptop").Value, ProductDescription.Create("Description").Value, Sku.Create("LAPTOP-001").Value, Money.Create(2500m, "USD").Value);
+      var categoryId = Guid.NewGuid();
+
+      var result = Product.Create(ProductId, categoryId, ProductName.Create("Gaming Laptop").Value, ProductDescription.Create("Description").Value, Sku.Create("LAPTOP-001").Value, Money.Create(2500m, "USD").Value);
 
       var product = result.Value;
 
@@ -198,7 +201,8 @@ namespace UnitTests.Catalog.Entities
 
     private static Product CreateProduct()
     {
-      return Product.Create(ProductId, ProductName.Create("Gaming Laptop").Value, ProductDescription.Create("High-end gaming laptop").Value, Sku.Create("LAPTOP-001").Value, Money.Create(2500m, "USD").Value).Value;
+      var categoryId = Guid.NewGuid();
+      return Product.Create(ProductId, categoryId, ProductName.Create("Gaming Laptop").Value, ProductDescription.Create("High-end gaming laptop").Value, Sku.Create("LAPTOP-001").Value, Money.Create(2500m, "USD").Value).Value;
     }
   }
 }

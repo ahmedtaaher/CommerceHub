@@ -15,6 +15,8 @@ namespace Application.Catalog.Commands.CreateProduct
       RuleFor(x => x.Price).GreaterThanOrEqualTo(0);
 
       RuleFor(x => x.Currency).Length(3);
+
+      RuleFor(x => x.CategoryId).NotEmpty();
     }
   }
 }

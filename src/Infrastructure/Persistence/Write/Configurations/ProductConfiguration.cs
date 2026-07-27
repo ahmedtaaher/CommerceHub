@@ -33,6 +33,8 @@ namespace Infrastructure.Persistence.Write.Configurations
         money.Property(x => x.Currency).HasConversion(currency => currency.Code, code => Currency.Create(code).Value).HasColumnName("Currency").HasMaxLength(3).IsRequired();
       });
 
+      builder.HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
+
       builder.Ignore(x => x.DomainEvents);
     }
   }

@@ -23,6 +23,8 @@ namespace Infrastructure.Persistence.Write.Configurations
 
       builder.HasIndex(x => x.Name).IsUnique();
 
+      builder.HasMany(x => x.Products).WithOne(x => x.Category).HasForeignKey(x => x.CategoryId);
+
       builder.Ignore(x => x.DomainEvents);
     }
   }
