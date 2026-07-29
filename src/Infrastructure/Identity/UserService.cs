@@ -134,5 +134,15 @@ namespace Infrastructure.Identity
 
       return Result.Success();
     }
+
+    public async Task<string?> GeneratePasswordResetTokenAsync(string email, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if (user is null)
+        return null;
+
+      return await _userManager.GeneratePasswordResetTokenAsync(user);
+    }
   }
 }

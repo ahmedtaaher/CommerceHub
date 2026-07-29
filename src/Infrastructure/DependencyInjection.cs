@@ -1,7 +1,9 @@
 using System.Security.Claims;
 using System.Text;
+using Application.Abstractions.Email;
 using Application.Abstractions.Identity;
 using Application.Abstractions.Persistence;
+using Infrastructure.Email;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Jwt;
 using Infrastructure.Identity.RefreshTokens;
@@ -102,6 +104,8 @@ public static class DependencyInjection
     services.AddHttpContextAccessor();
 
     services.AddScoped<ICurrentUser, CurrentUser>();
+
+    services.AddScoped<IEmailService, FakeEmailService>();
 
     return services;
   }

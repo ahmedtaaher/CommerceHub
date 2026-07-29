@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using API.Contracts.Auth;
 using Application.Auth.ChangePassword;
+using Application.Auth.ForgotPassword;
 using Application.Auth.GetCurrentUser;
 using Application.Auth.Login;
 using Application.Auth.Logout;
@@ -125,6 +126,19 @@ namespace API.Controllers
       }
 
       return NoContent();
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
+    {
+      var result = await _sender.Send(new ForgotPasswordCommand(request.Email));
+
+      if (result.IsFailure)
+      {
+        return BadRequest(result.Error);
+      }
+
+      return Ok();
     }
   }
 }
