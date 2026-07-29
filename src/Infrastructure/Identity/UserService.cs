@@ -100,5 +100,17 @@ namespace Infrastructure.Identity
 
       return Result.Success();
     }
+
+    public async Task<(Guid Id, string FirstName, string LastName, string Email, IList<string> Roles)?> GetProfileAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByIdAsync(userId.ToString());
+
+      if (user is null)
+        return null;
+
+      var roles = await _userManager.GetRolesAsync(user);
+
+      return (user.Id, user.FirstName, user.LastName, user.Email!, roles);
+    }
   }
 }

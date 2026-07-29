@@ -99,6 +99,10 @@ public static class DependencyInjection
 
     services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
 
+    services.AddHttpContextAccessor();
+
+    services.AddScoped<ICurrentUser, CurrentUser>();
+
     return services;
   }
 }

@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using API.Contracts.Auth;
 using Application.Auth.ChangePassword;
+using Application.Auth.GetCurrentUser;
 using Application.Auth.Login;
 using Application.Auth.Logout;
 using Application.Auth.Refresh;
@@ -95,6 +96,18 @@ namespace API.Controllers
       }
 
       return NoContent();
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> Me()
+    {
+      var result = await _sender.Send(new GetCurrentUserQuery());
+
+      if (result.IsFailure)
+        return NotFound(result.Error);
+
+      return Ok(result.Value);
     }
   }
 }
