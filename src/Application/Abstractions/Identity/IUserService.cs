@@ -8,6 +8,8 @@ namespace Application.Abstractions.Identity
 
     Task<(Guid Id, string Email, IList<string> Roles)?> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
 
+    Task<(Guid Id, string Email, IList<string> Roles)?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default);
+
     Task AddToRoleAsync(Guid userId, string role, CancellationToken cancellationToken = default);
   }
 }

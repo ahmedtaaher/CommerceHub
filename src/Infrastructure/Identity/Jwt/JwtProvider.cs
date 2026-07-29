@@ -17,7 +17,7 @@ namespace Infrastructure.Identity.Jwt
       _options = options.Value;
     }
 
-    public TokenResponse GenerateAsync(Guid userId, string email, IEnumerable<string> roles)
+    public (string AccessToken, DateTime ExpiresAt) GenerateAsync(Guid userId, string email, IEnumerable<string> roles)
     {
       var claims = new List<Claim>
       {
@@ -43,7 +43,7 @@ namespace Infrastructure.Identity.Jwt
 
       var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return new TokenResponse(accessToken, expiresAt);
+      return (accessToken, expiresAt);
     }
   }
 }

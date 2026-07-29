@@ -4,6 +4,7 @@ using Application.Abstractions.Identity;
 using Application.Abstractions.Persistence;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Jwt;
+using Infrastructure.Identity.RefreshTokens;
 using Infrastructure.Persistence.Read;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Write;
@@ -89,6 +90,14 @@ public static class DependencyInjection
     services.AddScoped<ICategoryRepository, CategoryRepository>();
 
     services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
+
+    services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+    services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+
+    services.AddScoped<ITokenHasher, Sha256TokenHasher>();
+
+    services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
 
     return services;
   }

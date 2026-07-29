@@ -68,5 +68,17 @@ namespace Infrastructure.Identity
 
       await _userManager.AddToRoleAsync(user, role);
     }
+
+    public async Task<(Guid Id, string Email, IList<string> Roles)?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByIdAsync(userId.ToString());
+
+      if (user is null)
+        return null;
+
+      var roles = await _userManager.GetRolesAsync(user);
+
+      return (user.Id, user.Email!, roles);
+    }
   }
 }
