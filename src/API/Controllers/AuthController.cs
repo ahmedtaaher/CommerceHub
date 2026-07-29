@@ -1,5 +1,6 @@
 using API.Contracts.Auth;
 using Application.Auth.Login;
+using Application.Auth.Logout;
 using Application.Auth.Refresh;
 using Application.Auth.Register;
 using MediatR;
@@ -56,6 +57,17 @@ namespace API.Controllers
         return Unauthorized(result.Error);
 
       return Ok(result.Value);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(LogoutRequest request)
+    {
+      var result = await _sender.Send(new LogoutCommand(request.RefreshToken));
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
+
+      return NoContent();
     }
   }
 }
