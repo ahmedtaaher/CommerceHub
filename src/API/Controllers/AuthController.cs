@@ -7,6 +7,7 @@ using Application.Auth.Login;
 using Application.Auth.Logout;
 using Application.Auth.Refresh;
 using Application.Auth.Register;
+using Application.Auth.UpdateProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -108,6 +109,22 @@ namespace API.Controllers
         return NotFound(result.Error);
 
       return Ok(result.Value);
+    }
+
+    [Authorize]
+    [HttpPut("profile")]
+    public async Task<IActionResult> UpdateProfile(UpdateProfileRequest request)
+    {
+      var command = new UpdateProfileCommand(request.FirstName, request.LastName);
+
+      var result = await _sender.Send(command);
+
+      if (result.IsFailure)
+      {
+        return BadRequest(result.Error);
+      }
+
+      return NoContent();
     }
   }
 }

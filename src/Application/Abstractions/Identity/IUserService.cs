@@ -17,5 +17,7 @@ namespace Application.Abstractions.Identity
     Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
 
     Task<(Guid Id, string FirstName, string LastName, string Email, IList<string> Roles)?> GetProfileAsync(Guid userId, CancellationToken cancellationToken = default);
+
+    Task<Result> UpdateProfileAsync(Guid userId, string firstName, string lastName, CancellationToken cancellationToken = default);
   }
 }

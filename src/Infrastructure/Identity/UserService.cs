@@ -112,5 +112,27 @@ namespace Infrastructure.Identity
 
       return (user.Id, user.FirstName, user.LastName, user.Email!, roles);
     }
+
+    public async Task<Result> UpdateProfileAsync(Guid userId, string firstName, string lastName, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByIdAsync(userId.ToString());
+
+      if (user is null)
+      {
+        return Result.Failure(new Error("Auth.UserNotFound", "User not found."));
+      }
+
+      user.FirstName = firstName.Trim();
+      user.LastName = lastName.Trim();
+
+      var result = await _userManager.UpdateAsync(user);
+
+      if (!result.Succeeded)
+      {
+        return Result.Failure(new Error("Auth.UpdateProfileFailed", string.Join(", ", result.Errors.Select(e => e.Description))));
+      }
+
+      return Result.Success();
+    }
   }
 }
