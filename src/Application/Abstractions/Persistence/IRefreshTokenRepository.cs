@@ -9,5 +9,7 @@ namespace Application.Abstractions.Persistence
     Task<RefreshToken?> GetByHashAsync(string tokenHash, CancellationToken cancellationToken = default);
 
     Task UpdateAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default);
+
+    Task<List<RefreshToken>> GetActiveTokensByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
   }
 }

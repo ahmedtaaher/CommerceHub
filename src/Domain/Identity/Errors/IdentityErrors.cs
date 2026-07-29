@@ -9,5 +9,7 @@ namespace Domain.Identity.Errors
     public static readonly Error RefreshTokenRevoked = new("Identity.RefreshTokenRevoked", "Refresh token has been revoked.");
 
     public static readonly Error InvalidRefreshToken = new("Identity.InvalidRefreshToken", "Refresh token is invalid.");
+
+    public static readonly Error ChangePasswordFailed = new("Identity.ChangePasswordFailed", "Failed to change password.");
   }
 }

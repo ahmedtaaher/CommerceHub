@@ -1,9 +1,13 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using API.Contracts.Auth;
+using Application.Auth.ChangePassword;
 using Application.Auth.Login;
 using Application.Auth.Logout;
 using Application.Auth.Refresh;
 using Application.Auth.Register;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -66,6 +70,29 @@ namespace API.Controllers
 
       if (result.IsFailure)
         return BadRequest(result.Error);
+
+      return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+    {
+      var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+      if (userIdClaim is null)
+      {
+        return Unauthorized();
+      }
+
+      var command = new ChangePasswordCommand(Guid.Parse(userIdClaim), request.CurrentPassword, request.NewPassword);
+
+      var result = await _sender.Send(command);
+
+      if (result.IsFailure)
+      {
+        return BadRequest(result.Error);
+      }
 
       return NoContent();
     }

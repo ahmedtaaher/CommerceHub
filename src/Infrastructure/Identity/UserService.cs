@@ -1,4 +1,5 @@
 using Application.Abstractions.Identity;
+using Domain.Shared.Errors;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Identity
@@ -79,6 +80,25 @@ namespace Infrastructure.Identity
       var roles = await _userManager.GetRolesAsync(user);
 
       return (user.Id, user.Email!, roles);
+    }
+
+    public async Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByIdAsync(userId.ToString());
+
+      if (user is null)
+      {
+        return Result.Failure(new Error("Auth.UserNotFound", "User not found."));
+      }
+
+      var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+      if (!result.Succeeded)
+      {
+        return Result.Failure(new Error("Auth.ChangePasswordFailed", string.Join(", ", result.Errors.Select(e => e.Description))));
+      }
+
+      return Result.Success();
     }
   }
 }

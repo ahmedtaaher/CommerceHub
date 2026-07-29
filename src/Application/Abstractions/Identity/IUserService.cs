@@ -1,3 +1,5 @@
+using Domain.Shared.Errors;
+
 namespace Application.Abstractions.Identity
 {
   public interface IUserService
@@ -11,5 +13,7 @@ namespace Application.Abstractions.Identity
     Task<(Guid Id, string Email, IList<string> Roles)?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default);
 
     Task AddToRoleAsync(Guid userId, string role, CancellationToken cancellationToken = default);
+
+    Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
   }
 }

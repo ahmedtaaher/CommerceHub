@@ -30,5 +30,10 @@ namespace Infrastructure.Persistence.Repositories
 
       return Task.CompletedTask;
     }
+
+    public async Task<List<RefreshToken>> GetActiveTokensByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+      return await _context.RefreshTokens.Where(x => x.UserId == userId && x.RevokedAt == null && x.ExpiresAt > DateTime.UtcNow).ToListAsync(cancellationToken);
+    }
   }
 }
