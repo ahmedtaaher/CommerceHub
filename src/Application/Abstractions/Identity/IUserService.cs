@@ -31,5 +31,9 @@ namespace Application.Abstractions.Identity
     Task<bool> IsEmailConfirmedAsync(string email, CancellationToken cancellationToken = default);
 
     Task<string?> GenerateEmailConfirmationTokenByEmailAsync(string email, CancellationToken cancellationToken = default);
+
+    Task<string?> GenerateChangeEmailTokenAsync(Guid userId, string newEmail, CancellationToken cancellationToken = default);
+
+    Task<Result> ChangeEmailAsync(Guid userId, string newEmail, string token, CancellationToken cancellationToken = default);
   }
 }

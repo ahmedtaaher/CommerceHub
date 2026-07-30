@@ -1,7 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using API.Contracts.Auth;
+using Application.Auth.ChangeEmail;
 using Application.Auth.ChangePassword;
+using Application.Auth.ConfirmChangeEmail;
 using Application.Auth.ConfirmEmail;
 using Application.Auth.ForgotPassword;
 using Application.Auth.GetCurrentUser;
@@ -172,6 +174,36 @@ namespace API.Controllers
     public async Task<IActionResult> ResendConfirmationEmail(ResendConfirmationEmailRequest request)
     {
       var result = await _sender.Send(new ResendConfirmationEmailCommand(request.Email));
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
+
+      return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("change-email")]
+    public async Task<IActionResult> ChangeEmail(ChangeEmailRequest request)
+    {
+      var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+      if (!Guid.TryParse(userIdClaim, out var userId))
+      {
+        return Unauthorized();
+      }
+
+      var result = await _sender.Send(new ChangeEmailCommand(userId, request.NewEmail));
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
+
+      return NoContent();
+    }
+
+    [HttpPost("confirm-change-email")]
+    public async Task<IActionResult> ConfirmChangeEmail(ConfirmChangeEmailRequest request)
+    {
+      var result = await _sender.Send(new ConfirmChangeEmailCommand(request.UserId, request.NewEmail, request.Token));
 
       if (result.IsFailure)
         return BadRequest(result.Error);

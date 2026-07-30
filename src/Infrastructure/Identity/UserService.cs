@@ -226,5 +226,38 @@ namespace Infrastructure.Identity
 
       return await _userManager.GenerateEmailConfirmationTokenAsync(user);
     }
+
+    public async Task<string?> GenerateChangeEmailTokenAsync(Guid userId, string newEmail, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByIdAsync(userId.ToString());
+
+      if (user is null)
+        return null;
+
+      return await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+    }
+
+    public async Task<Result> ChangeEmailAsync(Guid userId, string newEmail, string token, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByIdAsync(userId.ToString());
+
+      if (user is null)
+      {
+        return Result.Failure(new Error("Auth.UserNotFound", "User not found."));
+      }
+
+      var result = await _userManager.ChangeEmailAsync(user, newEmail, token);
+
+      if (!result.Succeeded)
+      {
+        return Result.Failure(new Error("Auth.ChangeEmailFailed", string.Join(", ", result.Errors.Select(x => x.Description))));
+      }
+
+      user.UserName = newEmail;
+
+      await _userManager.UpdateAsync(user);
+
+      return Result.Success();
+    }
   }
 }
