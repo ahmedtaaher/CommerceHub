@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using API.Contracts.Auth;
 using Application.Auth.ChangePassword;
+using Application.Auth.ConfirmEmail;
 using Application.Auth.ForgotPassword;
 using Application.Auth.GetCurrentUser;
 using Application.Auth.Login;
@@ -151,6 +152,17 @@ namespace API.Controllers
       {
         return BadRequest(result.Error);
       }
+
+      return NoContent();
+    }
+
+    [HttpPost("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(ConfirmEmailRequest request)
+    {
+      var result = await _sender.Send(new ConfirmEmailCommand(request.Email, request.Token));
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
 
       return NoContent();
     }

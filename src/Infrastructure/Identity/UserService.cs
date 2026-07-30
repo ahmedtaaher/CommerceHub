@@ -1,4 +1,5 @@
 using Application.Abstractions.Identity;
+using Application.Common.Authorization;
 using Domain.Shared.Errors;
 using Microsoft.AspNetCore.Identity;
 
@@ -33,6 +34,13 @@ namespace Infrastructure.Identity
         throw new InvalidOperationException(string.Join(Environment.NewLine, result.Errors.Select(x => x.Description)));
       }
 
+      var roleResult = await _userManager.AddToRoleAsync(user, Roles.Viewer);
+
+      if (!roleResult.Succeeded)
+      {
+        throw new InvalidOperationException(string.Join(Environment.NewLine, roleResult.Errors.Select(x => x.Description)));
+      }
+
       return user.Id;
     }
 
@@ -49,8 +57,11 @@ namespace Infrastructure.Identity
 
       if (user is null)
         return null;
+      
+      if (!user.EmailConfirmed)
+        return null;
 
-      var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+      var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false);
 
       if (!result.Succeeded)
         return null;
@@ -159,6 +170,35 @@ namespace Infrastructure.Identity
       if (!result.Succeeded)
       {
         return Result.Failure(new Error("Auth.ResetPasswordFailed", string.Join(", ", result.Errors.Select(e => e.Description))));
+      }
+
+      return Result.Success();
+    }
+
+    public async Task<string?> GenerateEmailConfirmationTokenAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByIdAsync(userId.ToString());
+
+      if (user is null)
+        return null;
+
+      return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+    }
+
+    public async Task<Result> ConfirmEmailAsync(string email, string token, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if (user is null)
+      {
+        return Result.Failure(new Error("Auth.UserNotFound", "User not found."));
+      }
+
+      var result = await _userManager.ConfirmEmailAsync(user, token);
+
+      if (!result.Succeeded)
+      {
+        return Result.Failure(new Error("Auth.InvalidConfirmationToken", string.Join(", ", result.Errors.Select(x => x.Description))));
       }
 
       return Result.Success();
