@@ -144,5 +144,24 @@ namespace Infrastructure.Identity
 
       return await _userManager.GeneratePasswordResetTokenAsync(user);
     }
+
+    public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if (user is null)
+      {
+        return Result.Failure(new Error("Auth.UserNotFound", "User not found."));
+      }
+
+      var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+      if (!result.Succeeded)
+      {
+        return Result.Failure(new Error("Auth.ResetPasswordFailed", string.Join(", ", result.Errors.Select(e => e.Description))));
+      }
+
+      return Result.Success();
+    }
   }
 }

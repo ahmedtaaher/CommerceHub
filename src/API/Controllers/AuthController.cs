@@ -8,6 +8,7 @@ using Application.Auth.Login;
 using Application.Auth.Logout;
 using Application.Auth.Refresh;
 using Application.Auth.Register;
+using Application.Auth.ResetPassword;
 using Application.Auth.UpdateProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -139,6 +140,19 @@ namespace API.Controllers
       }
 
       return Ok();
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+    {
+      var result = await _sender.Send(new ResetPasswordCommand(request.Email, request.Token, request.NewPassword));
+
+      if (result.IsFailure)
+      {
+        return BadRequest(result.Error);
+      }
+
+      return NoContent();
     }
   }
 }
