@@ -203,5 +203,28 @@ namespace Infrastructure.Identity
 
       return Result.Success();
     }
+
+    public async Task<bool> IsEmailConfirmedAsync(string email, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if (user is null)
+        return false;
+
+      return await _userManager.IsEmailConfirmedAsync(user);
+    }
+
+    public async Task<string?> GenerateEmailConfirmationTokenByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+      var user = await _userManager.FindByEmailAsync(email);
+
+      if (user is null)
+        return null;
+
+      if (await _userManager.IsEmailConfirmedAsync(user))
+        return null;
+
+      return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+    }
   }
 }

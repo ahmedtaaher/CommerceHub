@@ -9,6 +9,7 @@ using Application.Auth.Login;
 using Application.Auth.Logout;
 using Application.Auth.Refresh;
 using Application.Auth.Register;
+using Application.Auth.ResendConfirmationEmail;
 using Application.Auth.ResetPassword;
 using Application.Auth.UpdateProfile;
 using MediatR;
@@ -160,6 +161,17 @@ namespace API.Controllers
     public async Task<IActionResult> ConfirmEmail(ConfirmEmailRequest request)
     {
       var result = await _sender.Send(new ConfirmEmailCommand(request.Email, request.Token));
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
+
+      return NoContent();
+    }
+
+    [HttpPost("resend-confirmation-email")]
+    public async Task<IActionResult> ResendConfirmationEmail(ResendConfirmationEmailRequest request)
+    {
+      var result = await _sender.Send(new ResendConfirmationEmailCommand(request.Email));
 
       if (result.IsFailure)
         return BadRequest(result.Error);
