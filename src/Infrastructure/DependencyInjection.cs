@@ -79,8 +79,10 @@ public static class DependencyInjection
 
     services.AddAuthorization();
 
-    services.AddScoped<IJwtProvider, JwtProvider>();
+    services.AddHttpContextAccessor();
 
+    services.AddScoped<IUserContext, UserContext>();
+    services.AddScoped<IJwtProvider, JwtProvider>();
     services.AddScoped<IUserService, UserService>();
 
     services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<CommerceHubWriteDbContext>());
@@ -100,8 +102,6 @@ public static class DependencyInjection
     services.AddScoped<ITokenHasher, Sha256TokenHasher>();
 
     services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
-
-    services.AddHttpContextAccessor();
 
     services.AddScoped<ICurrentUser, CurrentUser>();
 

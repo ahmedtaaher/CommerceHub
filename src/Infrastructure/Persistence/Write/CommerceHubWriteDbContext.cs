@@ -1,3 +1,4 @@
+using Application.Abstractions.Identity;
 using Application.Abstractions.Persistence;
 using Domain.Catalog.Entities;
 using Domain.Shared.Abstractions;
@@ -10,10 +11,12 @@ namespace Infrastructure.Persistence.Write
   public sealed class CommerceHubWriteDbContext : DbContext, IUnitOfWork
   {
     private readonly IPublisher _publisher;
+    private readonly IUserContext _userContext;
 
-    public CommerceHubWriteDbContext(DbContextOptions<CommerceHubWriteDbContext> options, IPublisher publisher) : base(options)
+    public CommerceHubWriteDbContext(DbContextOptions<CommerceHubWriteDbContext> options, IPublisher publisher, IUserContext userContext) : base(options)
     {
       _publisher = publisher;
+      _userContext = userContext;
     }
 
     public DbSet<Product> Products => Set<Product>();
@@ -29,6 +32,8 @@ namespace Infrastructure.Persistence.Write
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+      ApplyAuditInformation();
+      
       var domainEvents = ChangeTracker.Entries<AggregateRoot<Guid>>().SelectMany(x => x.Entity.DomainEvents).ToList();
 
       var result = await base.SaveChangesAsync(cancellationToken);
@@ -44,6 +49,25 @@ namespace Infrastructure.Persistence.Write
       }
 
       return result;
+    }
+
+    private void ApplyAuditInformation()
+    {
+      var userId = _userContext.UserId;
+      var now = DateTime.UtcNow;
+
+      foreach (var entry in ChangeTracker.Entries<AuditableEntity<Guid>>())
+      {
+        if (entry.State == EntityState.Added)
+        {
+          entry.Entity.SetCreatedAudit(userId, now);
+        }
+
+        if (entry.State == EntityState.Modified)
+        {
+          entry.Entity.SetModifiedAudit(userId, now);
+        }
+      }
     }
   }
 }

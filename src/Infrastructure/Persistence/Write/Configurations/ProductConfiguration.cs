@@ -36,6 +36,8 @@ namespace Infrastructure.Persistence.Write.Configurations
       builder.HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
 
       builder.Ignore(x => x.DomainEvents);
+
+      AuditableEntityConfiguration.Configure<Product, Guid>(builder);
     }
   }
 }

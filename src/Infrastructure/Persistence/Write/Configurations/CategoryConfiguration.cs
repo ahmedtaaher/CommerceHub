@@ -26,6 +26,8 @@ namespace Infrastructure.Persistence.Write.Configurations
       builder.HasMany(x => x.Products).WithOne(x => x.Category).HasForeignKey(x => x.CategoryId);
 
       builder.Ignore(x => x.DomainEvents);
+
+      AuditableEntityConfiguration.Configure<Category, Guid>(builder);
     }
   }
 }

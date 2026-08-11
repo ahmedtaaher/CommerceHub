@@ -2,7 +2,7 @@ using Domain.Shared.Events;
 
 namespace Domain.Shared.Abstractions
 {
-  public abstract class AggregateRoot<TId> : BaseEntity<TId>
+  public abstract class AggregateRoot<TId> : AuditableEntity<TId>
   {
     private readonly List<IDomainEvent> _domainEvents = [];
    
