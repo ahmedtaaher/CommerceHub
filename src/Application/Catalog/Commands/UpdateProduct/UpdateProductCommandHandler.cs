@@ -53,6 +53,8 @@ namespace Application.Catalog.Commands.UpdateProduct
       if (priceChangeResult.IsFailure)
         return priceChangeResult;
 
+      _repository.Update(product);
+
       return Result.Success();
     }
   }

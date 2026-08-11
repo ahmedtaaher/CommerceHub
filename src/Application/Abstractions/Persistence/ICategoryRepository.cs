@@ -13,6 +13,8 @@ namespace Application.Abstractions.Persistence
 
     Task AddAsync(Category category, CancellationToken cancellationToken = default);
 
+    void Update(Category category);
+
     void Remove(Category category);
   }
 }

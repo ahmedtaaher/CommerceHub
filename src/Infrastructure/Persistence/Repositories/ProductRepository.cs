@@ -24,6 +24,11 @@ namespace Infrastructure.Persistence.Repositories
       return await _context.Products.AnyAsync(x => x.Sku == sku, cancellationToken);
     }
 
+    public async Task<bool> ExistsByCategoryIdAsync(Guid categoryId, CancellationToken cancellationToken = default)
+    {
+      return await _context.Products.AnyAsync(x => x.CategoryId == categoryId, cancellationToken);
+    }
+
     public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
       return await _context.Products.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);

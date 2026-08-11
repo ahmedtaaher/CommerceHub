@@ -1,4 +1,5 @@
 using Domain.Shared.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Write.Configurations
@@ -14,6 +15,12 @@ namespace Infrastructure.Persistence.Write.Configurations
       builder.Property(x => x.LastModifiedBy).IsRequired(false);
 
       builder.Property(x => x.LastModifiedAt).IsRequired(false);
+
+      builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
+
+      builder.Property(x => x.DeletedBy).IsRequired(false);
+
+      builder.Property(x => x.DeletedAt).IsRequired(false);
     }
   }
 }

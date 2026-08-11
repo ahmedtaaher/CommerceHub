@@ -17,7 +17,7 @@ namespace Application.Behaviors
 
       var response = await next();
 
-      var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
+      await _unitOfWork.SaveChangesAsync(cancellationToken);
 
       return response;
     }

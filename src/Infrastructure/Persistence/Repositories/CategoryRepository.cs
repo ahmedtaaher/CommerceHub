@@ -38,5 +38,10 @@ namespace Infrastructure.Persistence.Repositories
     {
       _context.Categories.Remove(category);
     }
+
+    public void Update(Category category)
+    {
+      _context.Categories.Update(category);
+    }
   }
 }

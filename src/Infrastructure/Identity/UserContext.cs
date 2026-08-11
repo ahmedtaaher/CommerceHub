@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Application.Abstractions.Identity;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +18,12 @@ namespace Infrastructure.Identity
     {
       get
       {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = _httpContextAccessor.HttpContext?.User;
+
+        if (user is null)
+          return null;
+
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier) ?? user.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
         if (Guid.TryParse(userId, out var id))
           return id;

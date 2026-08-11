@@ -11,6 +11,8 @@ namespace Application.Abstractions.Persistence
 
     Task<bool> ExistsBySkuAsync(Sku sku, CancellationToken cancellationToken = default);
 
+    Task<bool> ExistsByCategoryIdAsync(Guid categoryId, CancellationToken cancellationToken = default);
+
     Task AddAsync(Product product, CancellationToken cancellationToken = default);
 
     void Update(Product product);

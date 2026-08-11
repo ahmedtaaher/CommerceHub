@@ -20,7 +20,9 @@ namespace Application.Catalog.Commands.DeleteProduct
       if (product is null)
         return Result.Failure(CatalogErrors.ProductNotFound);
 
-      _repository.Remove(product);
+      product.SoftDelete();
+
+      _repository.Update(product);
 
       return Result.Success();
     }

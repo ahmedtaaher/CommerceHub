@@ -27,6 +27,8 @@ namespace Infrastructure.Persistence.Write.Configurations
 
       builder.Ignore(x => x.DomainEvents);
 
+      builder.HasQueryFilter(x => !x.IsDeleted);
+
       AuditableEntityConfiguration.Configure<Category, Guid>(builder);
     }
   }

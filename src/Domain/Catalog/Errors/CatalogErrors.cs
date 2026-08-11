@@ -35,5 +35,7 @@ namespace Domain.Catalog.Errors
     public static readonly Error CategoryNotFound = new("Category.NotFound", "Category was not found.");
 
     public static readonly Error CategoryAlreadyExists = new("Category.AlreadyExists", "A category with the same name already exists.");
+
+    public static readonly Error CategoryHasProducts = new("Category.HasProducts", "Cannot delete category because it has associated products.");
   }
 }

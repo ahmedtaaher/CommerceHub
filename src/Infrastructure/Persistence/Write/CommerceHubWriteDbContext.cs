@@ -61,12 +61,21 @@ namespace Infrastructure.Persistence.Write
         if (entry.State == EntityState.Added)
         {
           entry.Entity.SetCreatedAudit(userId, now);
+          continue;
         }
 
-        if (entry.State == EntityState.Modified)
+        if (entry.State != EntityState.Modified)
+          continue;
+
+        var isSoftDelete = !entry.Property(x => x.IsDeleted).OriginalValue && entry.Property(x => x.IsDeleted).CurrentValue;
+
+        if (isSoftDelete)
         {
-          entry.Entity.SetModifiedAudit(userId, now);
+          entry.Entity.SetDeletedAudit(userId, now);
+          continue;
         }
+
+        entry.Entity.SetModifiedAudit(userId, now);
       }
     }
   }

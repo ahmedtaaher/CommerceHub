@@ -85,7 +85,7 @@ public static class DependencyInjection
     services.AddScoped<IJwtProvider, JwtProvider>();
     services.AddScoped<IUserService, UserService>();
 
-    services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<CommerceHubWriteDbContext>());
+    services.AddScoped<IUnitOfWork, UnitOfWork>();
 
     services.AddScoped<IProductRepository, ProductRepository>();
     
