@@ -1,6 +1,9 @@
 using API.Contracts.Products;
+using Application.Catalog.Commands.ActivateProduct;
 using Application.Catalog.Commands.CreateProduct;
+using Application.Catalog.Commands.DeactivateProduct;
 using Application.Catalog.Commands.DeleteProduct;
+using Application.Catalog.Commands.DiscontinueProduct;
 using Application.Catalog.Commands.UpdateProduct;
 using Application.Catalog.Queries.GetProductById;
 using Application.Catalog.Queries.GetProducts;
@@ -95,6 +98,42 @@ namespace API.Controllers
 
       if (result.IsFailure)
         return NotFound(result.Error);
+
+      return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("{id:guid}/activate")]
+    public async Task<IActionResult> Activate(Guid id, CancellationToken cancellationToken)
+    {
+      var result = await _sender.Send(new ActivateProductCommand(id), cancellationToken);
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
+
+      return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("{id:guid}/deactivate")]
+    public async Task<IActionResult> Deactivate(Guid id, CancellationToken cancellationToken)
+    {
+      var result = await _sender.Send(new DeactivateProductCommand(id), cancellationToken);
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
+
+      return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("{id:guid}/discontinue")]
+    public async Task<IActionResult> Discontinue(Guid id, CancellationToken cancellationToken)
+    {
+      var result = await _sender.Send(new DiscontinueProductCommand(id), cancellationToken);
+
+      if (result.IsFailure)
+        return BadRequest(result.Error);
 
       return NoContent();
     }
